@@ -1,0 +1,126 @@
+name: publish-release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to publish, for example v0.1.0"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+      DOTNET_NOLOGO: "true"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.3
+        with:
+          fetch-depth: 0
+
+      # Switch the working tree to the requested tag BEFORE any validation step
+      # so build, format, gates and tests run against the exact commit that will
+      # be published. Without this, workflow_dispatch would validate the default
+      # branch HEAD while publishing a potentially unrelated tag.
+      - name: Resolve workflow_dispatch tag
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          DISPATCH_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          if ! git rev-parse --verify --quiet "refs/tags/${DISPATCH_TAG}" >/dev/null; then
+            echo "::error::Tag '${DISPATCH_TAG}' does not exist."
+            exit 1
+          fi
+          git -c advice.detachedHead=false checkout --detach "refs/tags/${DISPATCH_TAG}"
+
+      - name: Detect NuGet lock files
+        id: nuget-locks
+        shell: bash
+        run: |
+          set -euo pipefail
+          if find . -name packages.lock.json -not -path "*/bin/*" -not -path "*/obj/*" | grep -q .; then
+            echo "found=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "found=false" >> "${GITHUB_OUTPUT}"
+          fi
+
+      - name: Setup .NET with NuGet cache
+        if: steps.nuget-locks.outputs.found == 'true'
+        uses: actions/setup-dotnet@v5.3.0
+        with:
+          dotnet-version: 10.0.x
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+
+      - name: Setup .NET
+        if: steps.nuget-locks.outputs.found != 'true'
+        uses: actions/setup-dotnet@v5.3.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore locked dependencies
+        if: steps.nuget-locks.outputs.found == 'true'
+        run: dotnet restore GenAIPlatform.slnx --locked-mode
+
+      - name: Restore dependencies
+        if: steps.nuget-locks.outputs.found != 'true'
+        run: dotnet restore GenAIPlatform.slnx
+
+      - name: Build
+        run: dotnet build GenAIPlatform.slnx --configuration Release --no-restore
+
+      - name: Format
+        run: dotnet format GenAIPlatform.slnx --verify-no-changes --verbosity minimal
+
+      - name: Code organization gate
+        shell: pwsh
+        run: ./scripts/code-organization-gate.ps1
+
+      - name: Vulnerability scan
+        shell: pwsh
+        run: ./scripts/package-vulnerability-gate.ps1
+
+      - name: Unit tests
+        run: dotnet test tests/GenAIPlatform.UnitTests/GenAIPlatform.UnitTests.csproj --configuration Release --no-build
+
+      - name: Publish GitHub release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DISPATCH_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+
+          # On push, GITHUB_REF_NAME is the tag. On workflow_dispatch, the earlier
+          # "Resolve workflow_dispatch tag" step has already detached HEAD at the
+          # requested tag, so we can take the tag name directly from the input.
+          tag_name="${GITHUB_REF_NAME}"
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            tag_name="${DISPATCH_TAG}"
+          fi
+
+          notes_file="docs/release-notes-${tag_name}.md"
+          if [[ ! -f "${notes_file}" ]]; then
+            notes_file="docs/release-notes-v0.1.0.md"
+          fi
+
+          if gh release view "${tag_name}" >/dev/null 2>&1; then
+            echo "GitHub release '${tag_name}' already exists."
+            exit 0
+          fi
+
+          gh release create "${tag_name}" \
+            --title "${tag_name}" \
+            --notes-file "${notes_file}"

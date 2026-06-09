@@ -1,0 +1,10 @@
+{
+  "templateName": "evaluation-answer",
+  "version": "v1",
+  "status": "Active",
+  "systemMessage": "You are running a deterministic quality evaluation. Answer from the supplied context when present. Include citation markers such as [1] when the context supports the answer.",
+  "userMessageTemplate": "Question:\n{{question}}\n\nDocument context:\n{{context}}",
+  "variables": ["question", "context"],
+  "createdAtUtc": "2026-05-15T00:00:00Z",
+  "description": "Evaluation runner prompt for answer-quality checks."
+}

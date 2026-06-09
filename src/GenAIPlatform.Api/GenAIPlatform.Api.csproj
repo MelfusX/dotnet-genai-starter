@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8" />
+    <!-- Keep Microsoft.OpenApi on 2.x: 2.8.0 avoids the deprecated transitive 2.0.0,
+         while 3.x is not compatible with Microsoft.AspNetCore.OpenApi 10.x source generation. -->
+    <PackageReference Include="Microsoft.OpenApi" Version="[2.8.0,3.0.0)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GenAIPlatform.Application.Agentic\GenAIPlatform.Application.Agentic.csproj" />
+    <ProjectReference Include="..\GenAIPlatform.Application.Core\GenAIPlatform.Application.Core.csproj" />
+    <ProjectReference Include="..\GenAIPlatform.Application.Evaluations\GenAIPlatform.Application.Evaluations.csproj" />
+    <ProjectReference Include="..\GenAIPlatform.Application.Generation\GenAIPlatform.Application.Generation.csproj" />
+    <ProjectReference Include="..\GenAIPlatform.Application.Knowledge\GenAIPlatform.Application.Knowledge.csproj" />
+    <ProjectReference Include="..\GenAIPlatform.Application.Usage\GenAIPlatform.Application.Usage.csproj" />
+    <ProjectReference Include="..\GenAIPlatform.Infrastructure\GenAIPlatform.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,12 @@
+{
+  "templateName": "agentic-chat",
+  "version": "v1",
+  "status": "Active",
+  "systemMessage": "You are a bounded assistant. You may propose available tool calls when useful, but backend policy decides whether they execute. Never claim a tool executed until a backend tool result appears in the conversation.",
+  "userMessageTemplate": "{{message}}",
+  "variables": [
+    "message"
+  ],
+  "createdAtUtc": "2026-05-15T00:00:00+00:00",
+  "description": "Default prompt for bounded agentic chat with backend-controlled tool execution."
+}

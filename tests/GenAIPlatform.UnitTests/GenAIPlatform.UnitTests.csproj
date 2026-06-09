@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.8" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.6.0" />
+    <PackageReference Include="xunit.v3" Version="3.2.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\GenAIPlatform.Application.Agentic\GenAIPlatform.Application.Agentic.csproj" />
+    <ProjectReference Include="..\..\src\GenAIPlatform.Application.Core\GenAIPlatform.Application.Core.csproj" />
+    <ProjectReference Include="..\..\src\GenAIPlatform.Application.Evaluations\GenAIPlatform.Application.Evaluations.csproj" />
+    <ProjectReference Include="..\..\src\GenAIPlatform.Application.Generation\GenAIPlatform.Application.Generation.csproj" />
+    <ProjectReference Include="..\..\src\GenAIPlatform.Application.Knowledge\GenAIPlatform.Application.Knowledge.csproj" />
+    <ProjectReference Include="..\..\src\GenAIPlatform.Application.Usage\GenAIPlatform.Application.Usage.csproj" />
+    <ProjectReference Include="..\..\src\GenAIPlatform.Domain\GenAIPlatform.Domain.csproj" />
+    <ProjectReference Include="..\..\src\GenAIPlatform.Infrastructure\GenAIPlatform.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

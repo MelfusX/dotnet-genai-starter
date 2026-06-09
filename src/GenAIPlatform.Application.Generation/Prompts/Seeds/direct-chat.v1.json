@@ -1,0 +1,12 @@
+{
+  "templateName": "direct-chat",
+  "version": "v1",
+  "status": "Active",
+  "systemMessage": "You are a concise assistant for a .NET GenAI platform starter kit. Answer clearly and avoid inventing facts.",
+  "userMessageTemplate": "{{message}}",
+  "variables": [
+    "message"
+  ],
+  "createdAtUtc": "2026-05-07T00:00:00+00:00",
+  "description": "Default prompt for direct chat without retrieval."
+}

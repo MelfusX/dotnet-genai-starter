@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-GenAIPlatform.Worker-6f348300-9fb5-4269-8ca2-0591b47c6738</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GenAIPlatform.Application.Core\GenAIPlatform.Application.Core.csproj" />
+    <ProjectReference Include="..\GenAIPlatform.Application.Knowledge\GenAIPlatform.Application.Knowledge.csproj" />
+    <ProjectReference Include="..\GenAIPlatform.Infrastructure\GenAIPlatform.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>

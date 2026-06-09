@@ -1,0 +1,53 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5.3.0
+        with:
+          dotnet-version: 10.0.x
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+
+      - name: Restore
+        run: dotnet restore GenAIPlatform.slnx --locked-mode
+
+      - name: Build
+        run: dotnet build GenAIPlatform.slnx --configuration Release --no-restore
+
+      - name: Format
+        run: dotnet format GenAIPlatform.slnx --verify-no-changes --verbosity minimal
+
+      - name: Code organization gate
+        shell: pwsh
+        run: ./scripts/code-organization-gate.ps1
+
+      - name: Vulnerability scan
+        shell: pwsh
+        run: ./scripts/package-vulnerability-gate.ps1
+
+      - name: Test
+        env:
+          GENAI_REQUIRE_DOCKER_TESTS: "true"
+        run: dotnet test GenAIPlatform.slnx --configuration Release --no-build

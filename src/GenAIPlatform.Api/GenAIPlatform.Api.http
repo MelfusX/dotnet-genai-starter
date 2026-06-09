@@ -1,0 +1,114 @@
+@GenAIPlatform.Api_HostAddress = http://localhost:5198
+
+GET {{GenAIPlatform.Api_HostAddress}}/api/v1/health
+Accept: application/json
+
+###
+
+GET {{GenAIPlatform.Api_HostAddress}}/api/v1/users/me
+Accept: application/json
+X-Demo-User-Id: alice
+X-Demo-Tenant-Id: local
+X-Demo-Roles: developer,admin
+X-Demo-Groups: demo,engineering
+
+###
+
+POST {{GenAIPlatform.Api_HostAddress}}/api/v1/chat/direct
+Content-Type: application/json
+Accept: application/json
+
+{
+  "message": "Explain what this starter kit is for.",
+  "correlationId": "demo-direct-chat-1"
+}
+
+###
+
+POST {{GenAIPlatform.Api_HostAddress}}/api/v1/chat/rag
+Content-Type: application/json
+Accept: application/json
+X-Demo-User-Id: alice
+X-Demo-Tenant-Id: local
+
+{
+  "message": "What does the indexed document say?",
+  "topK": 5,
+  "minSimilarityScore": -1,
+  "correlationId": "demo-rag-chat-1"
+}
+
+###
+
+POST {{GenAIPlatform.Api_HostAddress}}/api/v1/chat/agentic
+Content-Type: application/json
+Accept: application/json
+X-Demo-User-Id: alice
+X-Demo-Tenant-Id: local
+
+{
+  "message": "Use my profile.",
+  "correlationId": "demo-agentic-1",
+  "approveRiskyTools": false
+}
+
+###
+
+POST {{GenAIPlatform.Api_HostAddress}}/api/v1/documents
+Content-Type: multipart/form-data; boundary=demo-document-boundary
+Accept: application/json
+X-Demo-User-Id: alice
+X-Demo-Tenant-Id: local
+
+--demo-document-boundary
+Content-Disposition: form-data; name="title"
+
+Demo Notes
+--demo-document-boundary
+Content-Disposition: form-data; name="accessLevel"
+
+TenantPublic
+--demo-document-boundary
+Content-Disposition: form-data; name="file"; filename="sample.md"
+Content-Type: text/markdown
+
+# Demo Notes
+
+This document will be queued for indexing.
+--demo-document-boundary--
+
+###
+
+GET {{GenAIPlatform.Api_HostAddress}}/api/v1/documents/00000000-0000-0000-0000-000000000000
+Accept: application/json
+X-Demo-User-Id: alice
+X-Demo-Tenant-Id: local
+
+###
+
+GET {{GenAIPlatform.Api_HostAddress}}/api/v1/usage?from=2026-05-01T00:00:00Z&to=2026-05-31T23:59:59Z&tenantId=local&model=mock-chat
+Accept: application/json
+X-Demo-User-Id: alice
+X-Demo-Tenant-Id: local
+
+###
+
+POST {{GenAIPlatform.Api_HostAddress}}/api/v1/evaluations/runs
+Content-Type: application/json
+Accept: application/json
+X-Demo-User-Id: alice
+X-Demo-Tenant-Id: local
+
+{
+  "datasetVersion": "sample-v1",
+  "correlationId": "demo-eval-1"
+}
+
+###
+
+GET {{GenAIPlatform.Api_HostAddress}}/api/v1/evaluations/runs/00000000-0000-0000-0000-000000000000/summary
+Accept: application/json
+X-Demo-User-Id: alice
+X-Demo-Tenant-Id: local
+
+###

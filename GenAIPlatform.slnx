@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/GenAIPlatform.Api/GenAIPlatform.Api.csproj" />
+    <Project Path="src/GenAIPlatform.Application.Agentic/GenAIPlatform.Application.Agentic.csproj" />
+    <Project Path="src/GenAIPlatform.Application.Core/GenAIPlatform.Application.Core.csproj" />
+    <Project Path="src/GenAIPlatform.Application.Evaluations/GenAIPlatform.Application.Evaluations.csproj" />
+    <Project Path="src/GenAIPlatform.Application.Generation/GenAIPlatform.Application.Generation.csproj" />
+    <Project Path="src/GenAIPlatform.Application.Knowledge/GenAIPlatform.Application.Knowledge.csproj" />
+    <Project Path="src/GenAIPlatform.Application.Usage/GenAIPlatform.Application.Usage.csproj" />
+    <Project Path="src/GenAIPlatform.Domain/GenAIPlatform.Domain.csproj" />
+    <Project Path="src/GenAIPlatform.Evaluations/GenAIPlatform.Evaluations.csproj" />
+    <Project Path="src/GenAIPlatform.Infrastructure/GenAIPlatform.Infrastructure.csproj" />
+    <Project Path="src/GenAIPlatform.Worker/GenAIPlatform.Worker.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/GenAIPlatform.IntegrationTests/GenAIPlatform.IntegrationTests.csproj" />
+    <Project Path="tests/GenAIPlatform.UnitTests/GenAIPlatform.UnitTests.csproj" />
+  </Folder>
+</Solution>

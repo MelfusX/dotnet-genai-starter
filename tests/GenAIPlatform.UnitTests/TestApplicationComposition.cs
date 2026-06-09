@@ -1,0 +1,29 @@
+using GenAIPlatform.Application.Agentic;
+using GenAIPlatform.Application.Core;
+using GenAIPlatform.Application.Evaluations;
+using GenAIPlatform.Application.Generation;
+using GenAIPlatform.Application.Knowledge;
+using GenAIPlatform.Application.Usage;
+using GenAIPlatform.Infrastructure.Observability;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace GenAIPlatform.UnitTests;
+
+internal static class TestApplicationComposition
+{
+    public static IServiceCollection AddTestApplication(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.AddApplicationCore(configuration);
+        services.AddKnowledgeApplication(configuration);
+        services.AddGenerationApplication(configuration);
+        services.AddAgenticApplication(configuration);
+        services.AddEvaluationsApplication(configuration);
+        services.AddUsageApplication(configuration);
+        services.AddObservabilityInfrastructure(configuration);
+
+        return services;
+    }
+}

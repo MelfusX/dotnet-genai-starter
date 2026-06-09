@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0": {
+      "Microsoft.AspNetCore.OpenApi": {
+        "type": "Direct",
+        "requested": "[10.0.8, )",
+        "resolved": "10.0.8",
+        "contentHash": "cw24xHE2QaWwyEG9GQwFbjboyabub6Vd80DIItUGENzcQOa/BEnTrXsg2GADqWTmY/3ycqk9ToLGjgvF/VRlGA==",
+        "dependencies": {
+          "Microsoft.OpenApi": "2.0.0"
+        }
+      },
+      "Microsoft.OpenApi": {
+        "type": "Direct",
+        "requested": "[2.8.0, 3.0.0)",
+        "resolved": "2.8.0",
+        "contentHash": "hjrqmDHk37NIFwDb3ZqlKr5nhj3uC2/x5V6F++RoLHWd+0vG/IpWBskA4ZqDh94TYRvtHNNkb3xNoVBGbgfr2g=="
+      },
+      "FluentValidation": {
+        "type": "Transitive",
+        "resolved": "12.1.1",
+        "contentHash": "EPpkIe1yh1a0OXyC100oOA8WMbZvqUu5plwhvYcb7oSELfyUZzfxV48BLhvs3kKo4NwG7MGLNgy1RJiYtT8Dpw=="
+      },
+      "FluentValidation.DependencyInjectionExtensions": {
+        "type": "Transitive",
+        "resolved": "12.1.1",
+        "contentHash": "D0VXh4dtjjX2aQizuaa0g6R8X3U1JaVqJPfGCvLwZX9t/O2h7tkpbitbadQMfwcgSPdDbI2vDxuwRMv/Uf9dHA==",
+        "dependencies": {
+          "FluentValidation": "12.1.1"
+        }
+      },
+      "Npgsql": {
+        "type": "Transitive",
+        "resolved": "10.0.3",
+        "contentHash": "7nb5YzXuvWWJxB0J8DiyL3we+X4FOctZrt0fIBnucOIaIevFEEwGQVZKtiu9olXdlNAK1eNgqSral6r/jlhI4w=="
+      },
+      "Pgvector": {
+        "type": "Transitive",
+        "resolved": "0.3.2",
+        "contentHash": "n7M5LuNejHUmtWky3zCbNO+tP1Gnjiuv9Qtu4LyvB1602dD8RiBxxCQp9jEjM0ZFDxAZF1oOWkNIkXw46KT00Q==",
+        "dependencies": {
+          "Npgsql": "8.0.5"
+        }
+      },
+      "genaiplatform.application.agentic": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "GenAIPlatform.Application.Core": "[1.0.0, )",
+          "GenAIPlatform.Application.Generation": "[1.0.0, )",
+          "GenAIPlatform.Domain": "[1.0.0, )"
+        }
+      },
+      "genaiplatform.application.core": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "GenAIPlatform.Domain": "[1.0.0, )"
+        }
+      },
+      "genaiplatform.application.evaluations": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "GenAIPlatform.Application.Core": "[1.0.0, )",
+          "GenAIPlatform.Application.Generation": "[1.0.0, )",
+          "GenAIPlatform.Application.Knowledge": "[1.0.0, )",
+          "GenAIPlatform.Domain": "[1.0.0, )"
+        }
+      },
+      "genaiplatform.application.generation": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "GenAIPlatform.Application.Core": "[1.0.0, )",
+          "GenAIPlatform.Application.Knowledge": "[1.0.0, )",
+          "GenAIPlatform.Domain": "[1.0.0, )"
+        }
+      },
+      "genaiplatform.application.knowledge": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "GenAIPlatform.Application.Core": "[1.0.0, )",
+          "GenAIPlatform.Domain": "[1.0.0, )"
+        }
+      },
+      "genaiplatform.application.usage": {
+        "type": "Project",
+        "dependencies": {
+          "GenAIPlatform.Application.Core": "[1.0.0, )",
+          "GenAIPlatform.Domain": "[1.0.0, )"
+        }
+      },
+      "genaiplatform.domain": {
+        "type": "Project"
+      },
+      "genaiplatform.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "GenAIPlatform.Application.Agentic": "[1.0.0, )",
+          "GenAIPlatform.Application.Core": "[1.0.0, )",
+          "GenAIPlatform.Application.Evaluations": "[1.0.0, )",
+          "GenAIPlatform.Application.Generation": "[1.0.0, )",
+          "GenAIPlatform.Application.Knowledge": "[1.0.0, )",
+          "GenAIPlatform.Application.Usage": "[1.0.0, )",
+          "GenAIPlatform.Domain": "[1.0.0, )",
+          "Npgsql": "[10.0.3, )",
+          "Pgvector": "[0.3.2, )"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+<Project>
+
+  <PropertyGroup>
+    <!-- Deterministic, reproducible restores: every project commits a packages.lock.json.
+         CI restores in locked mode so any dependency drift fails the build instead of
+         silently resolving a different version. Regenerate by running `dotnet restore`
+         after changing a PackageReference, then commit the updated lock files. -->
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+
+</Project>

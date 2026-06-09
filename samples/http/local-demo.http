@@ -1,0 +1,121 @@
+@host = http://localhost:5198
+# Paste IDs returned by the document upload / evaluation run requests before sending dependent requests.
+@documentId = 00000000-0000-0000-0000-000000000000
+@evaluationRunId = 00000000-0000-0000-0000-000000000000
+
+GET {{host}}/api/v1/health
+Accept: application/json
+
+###
+
+GET {{host}}/api/v1/users/me
+Accept: application/json
+X-Demo-User-Id: alice
+X-Demo-Tenant-Id: local
+X-Demo-Roles: developer,admin
+X-Demo-Groups: demo,engineering
+
+###
+
+POST {{host}}/api/v1/chat/direct
+Content-Type: application/json
+Accept: application/json
+X-Demo-User-Id: alice
+X-Demo-Tenant-Id: local
+
+{
+  "message": "Explain what this starter kit is for in two sentences.",
+  "correlationId": "sample-direct-chat"
+}
+
+###
+
+POST {{host}}/api/v1/documents
+Content-Type: multipart/form-data; boundary=sample-document-boundary
+Accept: application/json
+X-Demo-User-Id: alice
+X-Demo-Tenant-Id: local
+
+--sample-document-boundary
+Content-Disposition: form-data; name="title"
+
+Demo Notes
+--sample-document-boundary
+Content-Disposition: form-data; name="accessLevel"
+
+TenantPublic
+--sample-document-boundary
+Content-Disposition: form-data; name="file"; filename="demo-notes.md"
+Content-Type: text/markdown
+
+# GenAI Platform Demo Notes
+
+The starter kit demonstrates direct chat, document upload, pgvector-backed retrieval, usage tracking, evaluations and bounded agentic chat. It uses mock model and embedding providers by default, and can be run against local OpenAI-compatible providers such as LM Studio.
+--sample-document-boundary--
+
+###
+
+GET {{host}}/api/v1/documents/{{documentId}}
+Accept: application/json
+X-Demo-User-Id: alice
+X-Demo-Tenant-Id: local
+
+###
+
+POST {{host}}/api/v1/chat/rag
+Content-Type: application/json
+Accept: application/json
+X-Demo-User-Id: alice
+X-Demo-Tenant-Id: local
+
+{
+  "message": "What does the demo document say this starter kit demonstrates?",
+  "topK": 5,
+  "minSimilarityScore": -1,
+  "correlationId": "sample-rag-chat"
+}
+
+###
+
+GET {{host}}/api/v1/usage?from=2026-06-01T00:00:00Z&to=2026-06-30T23:59:59Z&tenantId=local
+Accept: application/json
+X-Demo-User-Id: alice
+X-Demo-Tenant-Id: local
+
+###
+
+POST {{host}}/api/v1/evaluations/runs
+Content-Type: application/json
+Accept: application/json
+X-Demo-User-Id: alice
+X-Demo-Tenant-Id: local
+
+{
+  "datasetVersion": "sample-v1",
+  "correlationId": "sample-evaluation-run"
+}
+
+###
+
+GET {{host}}/api/v1/evaluations/runs/{{evaluationRunId}}/summary
+Accept: application/json
+X-Demo-User-Id: alice
+X-Demo-Tenant-Id: local
+
+###
+
+# LM Studio/Qwen is more reliable when the sample asks for a concrete tool-backed lookup.
+# A vague "Use my profile." may produce a clarification without a tool call.
+POST {{host}}/api/v1/chat/agentic
+Content-Type: application/json
+Accept: application/json
+X-Demo-User-Id: alice
+X-Demo-Tenant-Id: local
+X-Demo-Roles: developer,admin
+X-Demo-Groups: demo,engineering
+
+{
+  "message": "Look up my current demo profile and tell me my user id, tenant, roles, and groups.",
+  "correlationId": "sample-agentic-chat",
+  "approveRiskyTools": false
+}

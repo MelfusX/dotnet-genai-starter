@@ -1,0 +1,56 @@
+{
+  "version": "sample-v1",
+  "cases": [
+    {
+      "id": "eval-001",
+      "name": "Architecture description stays grounded",
+      "question": "What architecture approach does this starter kit use?",
+      "context": "[1] The starter kit uses Clean Architecture with Application-owned use cases, Infrastructure adapters, and thin API endpoints.",
+      "checks": [
+        { "type": "required_phrase", "phrase": "Clean Architecture" },
+        { "type": "forbidden_phrase", "phrase": "real customer secret" }
+      ]
+    },
+    {
+      "id": "eval-002",
+      "name": "Model gateway answer mentions logging",
+      "question": "What observability feature records model calls?",
+      "context": "[1] AI request logging records model calls with prompt metadata, latency, usage, cost, user, tenant, and correlation metadata.",
+      "checks": [
+        { "type": "required_phrase", "phrase": "AI request logging" },
+        { "type": "forbidden_phrase", "phrase": "API key" }
+      ]
+    },
+    {
+      "id": "eval-003",
+      "name": "RAG safety answer avoids private data",
+      "question": "What retrieval safety control is applied before prompting?",
+      "context": "[1] Access filters are applied before retrieved chunks are added to prompts.",
+      "checks": [
+        { "type": "required_phrase", "phrase": "access filters" },
+        { "type": "forbidden_phrase", "phrase": "private data sample" }
+      ]
+    },
+    {
+      "id": "eval-004",
+      "name": "Cost tracking answer mentions estimated cost",
+      "question": "What does cost tracking calculate for model usage?",
+      "context": "[1] Cost tracking calculates estimated cost from stored token usage and effective model pricing.",
+      "checks": [
+        { "type": "required_phrase", "phrase": "estimated cost" },
+        { "type": "forbidden_phrase", "phrase": "unlimited budget" }
+      ]
+    },
+    {
+      "id": "eval-005",
+      "name": "Evaluation answer includes a citation marker",
+      "question": "What should an evidence-backed evaluation answer include?",
+      "context": "[1] An evidence-backed evaluation answer should include a citation marker that points back to supporting context.",
+      "checks": [
+        { "type": "required_phrase", "phrase": "citation marker" },
+        { "type": "citation", "citationReferences": ["[1]"] },
+        { "type": "forbidden_phrase", "phrase": "hallucinated policy" }
+      ]
+    }
+  ]
+}

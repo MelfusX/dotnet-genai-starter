@@ -1,0 +1,25 @@
+name: dotnet-genai-starter
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: genai-platform-postgres
+    # Defaults are local-only demo values. Override from an ignored .env file
+    # or shell variables; do not copy them into deployed runtime configuration.
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-genai_platform}
+      POSTGRES_USER: ${POSTGRES_USER:-genai}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-genai_dev_password}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./infra/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-genai} -d ${POSTGRES_DB:-genai_platform}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-data:

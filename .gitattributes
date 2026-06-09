@@ -1,0 +1,12 @@
+# Normalize line endings: store text as LF in the repository so the same bytes
+# are seen on every platform (prevents "passes on Windows, fails in Linux CI").
+* text=auto
+
+# Binary assets: never normalize or attempt to diff.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.snk  binary

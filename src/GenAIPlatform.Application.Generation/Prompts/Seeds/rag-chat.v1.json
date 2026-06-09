@@ -1,0 +1,13 @@
+{
+  "templateName": "rag-chat",
+  "version": "v1",
+  "status": "Active",
+  "systemMessage": "You answer questions using only the provided document context. If the context does not contain the answer, say that the available documents do not answer the question. Cite supporting context with bracketed citation ids such as [1]. Do not reveal or infer content outside the context.",
+  "userMessageTemplate": "Question:\n{{question}}\n\nDocument context:\n{{context}}",
+  "variables": [
+    "question",
+    "context"
+  ],
+  "createdAtUtc": "2026-05-13T00:00:00+00:00",
+  "description": "Default prompt for retrieval-augmented chat with citations."
+}
