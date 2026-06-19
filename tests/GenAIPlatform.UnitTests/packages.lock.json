@@ -101,11 +101,11 @@
       },
       "Microsoft.Extensions.Configuration.Binder": {
         "type": "Transitive",
-        "resolved": "10.0.8",
-        "contentHash": "R3NN1X+kVu14uoxLEW6sBSQyhogDSbaOQzILnCtuXxBN4hx22AgjWPwZX6v/suERFkEDgU1lk12AglHTrUxhlw==",
+        "resolved": "10.0.9",
+        "contentHash": "Tp/+LPb70RyjjtLg9m5C959eP4KrUpJHThZfAegZVpsfmGvzfuNkuYbI/ft+LvXhMSyUcAeOPaN6rzTccwnZAg==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "10.0.8",
-          "Microsoft.Extensions.Configuration.Abstractions": "10.0.8"
+          "Microsoft.Extensions.Configuration": "10.0.9",
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.9"
         }
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
@@ -164,14 +164,14 @@
       },
       "Microsoft.Extensions.Options.ConfigurationExtensions": {
         "type": "Transitive",
-        "resolved": "10.0.8",
-        "contentHash": "VOapXeO3lhBH0zYoyAH7tjapuo4V5pTHlevPpiSHueEquAajqd5nF0mttm+h/uE/exwAEuM5s26SzOJtletE3w==",
+        "resolved": "10.0.9",
+        "contentHash": "Y4E24zffF/aPS0igNvY6ZzAQfbxd6AYdC9L4brnH+uK0yYYHIR6FeGVQVVjAOo8wub1EQDl2B90lCcpqoTF7Yw==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "10.0.8",
-          "Microsoft.Extensions.Configuration.Binder": "10.0.8",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.8",
-          "Microsoft.Extensions.Options": "10.0.8",
-          "Microsoft.Extensions.Primitives": "10.0.8"
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.9",
+          "Microsoft.Extensions.Configuration.Binder": "10.0.9",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.9",
+          "Microsoft.Extensions.Options": "10.0.9",
+          "Microsoft.Extensions.Primitives": "10.0.9"
         }
       },
       "Microsoft.Extensions.Primitives": {
@@ -326,8 +326,8 @@
           "GenAIPlatform.Domain": "[1.0.0, )",
           "Microsoft.Extensions.Configuration.Abstractions": "[10.0.9, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.9, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.8, )",
-          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.8, )"
+          "Microsoft.Extensions.Logging.Abstractions": "[10.0.9, )",
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.9, )"
         }
       },
       "genaiplatform.application.core": {
@@ -337,8 +337,8 @@
           "GenAIPlatform.Domain": "[1.0.0, )",
           "Microsoft.Extensions.Configuration.Abstractions": "[10.0.9, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.9, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.8, )",
-          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.8, )"
+          "Microsoft.Extensions.Logging.Abstractions": "[10.0.9, )",
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.9, )"
         }
       },
       "genaiplatform.application.evaluations": {
@@ -352,8 +352,8 @@
           "GenAIPlatform.Domain": "[1.0.0, )",
           "Microsoft.Extensions.Configuration.Abstractions": "[10.0.9, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.9, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.8, )",
-          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.8, )"
+          "Microsoft.Extensions.Logging.Abstractions": "[10.0.9, )",
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.9, )"
         }
       },
       "genaiplatform.application.generation": {
@@ -366,8 +366,8 @@
           "GenAIPlatform.Domain": "[1.0.0, )",
           "Microsoft.Extensions.Configuration.Abstractions": "[10.0.9, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.9, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.8, )",
-          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.8, )"
+          "Microsoft.Extensions.Logging.Abstractions": "[10.0.9, )",
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.9, )"
         }
       },
       "genaiplatform.application.knowledge": {
@@ -379,8 +379,8 @@
           "GenAIPlatform.Domain": "[1.0.0, )",
           "Microsoft.Extensions.Configuration.Abstractions": "[10.0.9, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.9, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.8, )",
-          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.8, )"
+          "Microsoft.Extensions.Logging.Abstractions": "[10.0.9, )",
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.9, )"
         }
       },
       "genaiplatform.application.usage": {
@@ -409,7 +409,7 @@
           "Microsoft.Extensions.DependencyInjection": "[10.0.9, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.9, )",
           "Microsoft.Extensions.Http": "[10.0.9, )",
-          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.8, )",
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.9, )",
           "Npgsql": "[10.0.3, )",
           "Pgvector": "[0.3.2, )"
         }
