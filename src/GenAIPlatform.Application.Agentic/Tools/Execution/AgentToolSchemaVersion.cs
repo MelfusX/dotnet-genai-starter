@@ -1,4 +1,4 @@
-namespace GenAIPlatform.Application.Agentic.Chat;
+namespace GenAIPlatform.Application.Agentic.Tools.Execution;
 
 internal static class AgentToolSchemaVersion
 {

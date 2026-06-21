@@ -1,17 +1,16 @@
 using GenAIPlatform.Domain.Agentic;
 using System.Text.Json;
 
-namespace GenAIPlatform.Application.Agentic.Chat;
+namespace GenAIPlatform.Application.Agentic.Tools.Execution;
 
 internal sealed record AgentToolExecutionOutcome(
     ToolApprovalState ApprovalState,
     ToolExecutionStatus ExecutionStatus,
     JsonElement? Output,
     string? ErrorCode,
-    string? ErrorMessage)
+    string? ErrorMessage,
+    Exception? Exception = null)
 {
-    public string? ResultText => Output?.GetRawText();
-
     public static AgentToolExecutionOutcome Rejected(
         string errorCode,
         string errorMessage)
@@ -75,13 +74,15 @@ internal sealed record AgentToolExecutionOutcome(
 
     public static AgentToolExecutionOutcome Failed(
         string errorCode,
-        string errorMessage)
+        string errorMessage,
+        Exception? exception = null)
     {
         return new AgentToolExecutionOutcome(
             ToolApprovalState.NotRequired,
             ToolExecutionStatus.Failed,
             null,
             errorCode,
-            errorMessage);
+            errorMessage,
+            exception);
     }
 }
