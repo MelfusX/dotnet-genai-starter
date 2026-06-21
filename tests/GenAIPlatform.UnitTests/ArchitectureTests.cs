@@ -71,6 +71,16 @@ public sealed class ArchitectureTests
                 "GenAIPlatform.Application.Generation",
                 "GenAIPlatform.Application.Evaluations",
                 "GenAIPlatform.Infrastructure"
+            ],
+        ["GenAIPlatform.Mcp"] =
+            [
+                "GenAIPlatform.Domain",
+                "GenAIPlatform.Application.Core",
+                "GenAIPlatform.Application.Knowledge",
+                "GenAIPlatform.Application.Generation",
+                "GenAIPlatform.Application.Agentic",
+                "GenAIPlatform.Application.Usage",
+                "GenAIPlatform.Infrastructure"
             ]
     };
 

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -24,6 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="appsettings.mcp.test.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Baselines\openapi-v1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -39,6 +42,7 @@
     <ProjectReference Include="..\..\src\GenAIPlatform.Api\GenAIPlatform.Api.csproj" />
     <ProjectReference Include="..\..\src\GenAIPlatform.Evaluations\GenAIPlatform.Evaluations.csproj" />
     <ProjectReference Include="..\..\src\GenAIPlatform.Infrastructure\GenAIPlatform.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\GenAIPlatform.Mcp\GenAIPlatform.Mcp.csproj" Aliases="McpHost" />
     <ProjectReference Include="..\..\src\GenAIPlatform.Worker\GenAIPlatform.Worker.csproj" />
   </ItemGroup>
 
