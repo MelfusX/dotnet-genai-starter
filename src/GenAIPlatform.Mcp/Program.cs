@@ -4,7 +4,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Server;
 
-var builder = Host.CreateApplicationBuilder(args);
+var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings
+{
+    Args = args,
+    ContentRootPath = AppContext.BaseDirectory
+});
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole(options =>
@@ -21,4 +25,3 @@ builder.Services
 await builder.Build().RunAsync();
 
 public partial class Program;
-

@@ -11,7 +11,13 @@ public sealed class McpUserContext(IOptionsSnapshot<McpIdentityOptions> options)
 
     public string? TenantId => options.Value.TenantId;
 
-    public IReadOnlyCollection<string> Roles => options.Value.Roles;
+    public IReadOnlyCollection<string> Roles => DistinctValues(options.Value.Roles);
 
-    public IReadOnlyCollection<string> Groups => options.Value.Groups;
+    public IReadOnlyCollection<string> Groups => DistinctValues(options.Value.Groups);
+
+    private static IReadOnlyCollection<string> DistinctValues(IEnumerable<string> values) =>
+        values
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
 }
