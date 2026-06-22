@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.2.0
+
+Adds a local stdio MCP host as a fourth consumption surface over the existing
+Application modules. The host exposes bounded read-only tools for server info,
+permission-aware RAG answers, usage totals and the governed current-user profile
+tool.
+
+The governed MCP tool calls the Agentic direct tool-execution use case, so safe
+tool execution still goes through backend policy and writes `tool_audit_logs`.
+Approval-required tools are not exposed as successful MCP host actions; direct
+use-case calls without approval fail closed with `approval_required` and are
+audited.
+
+Documentation now covers the MCP host, Claude Desktop configuration, safe-only
+host limitation and the internal dispatcher swap path if a team chooses MediatR
+in its own application.
+
+Not a production system.
+
 ## v0.1.0
 
 Initial public reference release.
