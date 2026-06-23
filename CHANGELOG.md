@@ -17,6 +17,12 @@ Documentation now covers the MCP host, Claude Desktop configuration, safe-only
 host limitation and the internal dispatcher swap path if a team chooses MediatR
 in its own application.
 
+Repository maintenance is also documented: changes land on protected `main`
+through pull requests, public release PRs update `VERSION` and release notes,
+and the `publish-release` workflow runs automatically after merge to `main`.
+It tags the current `main` HEAD and publishes the GitHub release from the
+matching `docs/release-notes` file. See `docs/versioning.md` and `AGENTS.md`.
+
 Not a production system.
 
 ## v0.1.0

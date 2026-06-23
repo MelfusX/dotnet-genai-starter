@@ -12,6 +12,16 @@
 - MCP documentation with built-binary startup guidance and a `claude_desktop_config.json` example using `ConnectionStrings__GenAIPlatform`.
 - Documentation for the internal dispatcher to MediatR swap boundary.
 
+## Repository Maintenance
+
+- Contribution and release flow is documented in `docs/versioning.md` and `AGENTS.md`: protected
+  `main`, pull-request-only changes, agent branch pushes only after explicit maintainer approval,
+  and release-ready public PRs with an explicit `VERSION` update.
+- The `publish-release` workflow runs automatically after merge to `main`, reads `VERSION`, reruns
+  build, formatting, code-organization, vulnerability and unit-test gates, then tags the current
+  `main` HEAD and publishes from the matching release-notes file. Full integration coverage remains
+  a PR/main CI responsibility.
+
 ## Safety And Privacy Defaults
 
 - The MCP host is consumer-only and does not expose document upload, document mutation or arbitrary registry execution.
