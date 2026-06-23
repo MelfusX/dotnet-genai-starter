@@ -124,6 +124,23 @@ $env:GENAI_REQUIRE_DOCKER_TESTS = "true"
 dotnet test tests\GenAIPlatform.IntegrationTests\GenAIPlatform.IntegrationTests.csproj
 ```
 
+## Contribution And Release Flow
+
+- `main` is protected. All changes land through a pull request; never push directly to `main`.
+- An automated agent may push a feature or release branch and open a pull request only after explicit
+  maintainer approval. It must not push to `main` and must not push tags.
+- Before opening a pull request, run the local verification commands above and stage only intended
+  files with explicit paths; never `git add -A`.
+- Keep commits atomic and green: one logical change per commit, each passing the gate.
+- For a public release PR, update `VERSION` with SemVer without a leading `v`, update `CHANGELOG.md`,
+  and add the matching `docs/release-notes-v<version>.md` file.
+- Releases are automatic after merge to `main`: the `publish-release` workflow runs on the `main` push,
+  reads `VERSION`, validates the matching release-notes file, reruns build/format/code-organization/
+  vulnerability/unit-test gates, tags the current `main` HEAD and publishes the GitHub release. Full
+  integration coverage is enforced before merge by PR/main CI.
+- Normal releases do not require `Run workflow`. `workflow_dispatch` and direct tag pushes are recovery
+  paths only. Agents must not push release tags.
+
 ## When Unsure
 
 Prefer the existing architecture and documented trade-offs. Ask only when a decision changes architecture, versioning, security posture or public behavior. For local implementation details, make the conservative choice that keeps the starter kit understandable.

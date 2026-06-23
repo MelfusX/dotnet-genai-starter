@@ -1,6 +1,8 @@
 using FluentValidation;
 using GenAIPlatform.Application.Agentic.Chat;
 using GenAIPlatform.Application.Agentic.Tools;
+using GenAIPlatform.Application.Agentic.Tools.Execute;
+using GenAIPlatform.Application.Agentic.Tools.Execution;
 using GenAIPlatform.Application.Core.Dispatching;
 using GenAIPlatform.Domain.Agentic;
 using Microsoft.Extensions.Configuration;
@@ -21,13 +23,16 @@ public static class Setup
         services.TryAddScoped<IAgentToolRegistry, DemoAgentToolRegistry>();
         services.TryAddScoped<ToolPolicy>();
         services.TryAddScoped<AgenticPromptBuilder>();
+        services.TryAddScoped<AgentToolAuditLogWriter>();
         services.TryAddScoped<AgentToolAuditWriter>();
+        services.TryAddScoped<GovernedAgentToolExecutor>();
         services.TryAddScoped<AgentToolExecutor>();
         services.TryAddScoped<AgenticToolCallProcessor>();
         services.TryAddScoped<IAgenticCostEstimator, NoopAgenticCostEstimator>();
         services.TryAddScoped<AgenticBudgetGuard>();
         services.TryAddScoped<AgenticChatLoopRunner>();
         services.TryAddScoped<IRequestHandler<AgenticChatCommand, AgenticChatResponse>, AgenticChatHandler>();
+        services.TryAddScoped<IRequestHandler<ExecuteToolCommand, ExecuteToolResponse>, ExecuteToolHandler>();
 
         return services;
     }

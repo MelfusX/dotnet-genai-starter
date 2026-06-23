@@ -7,7 +7,7 @@ This is a starter kit, not a production system. It shows how the platform bounda
 ## What This Is
 
 - A modular-monolith sample using Clean Architecture, simple domain records and a lightweight internal application pipeline.
-- A working local demo for document upload, DB-backed indexing, pgvector-backed RAG, direct chat, usage reporting, API/CLI evaluations and bounded agentic chat.
+- A working local demo for document upload, DB-backed indexing, pgvector-backed RAG, direct chat, usage reporting, API/CLI evaluations, bounded agentic chat and a local MCP host.
 - A reference for safe GenAI defaults: access filters before prompt construction, metadata-only request logging by default, deterministic mock providers for tests and backend policy for tools.
 
 ## What This Is Not
@@ -19,7 +19,7 @@ This is a starter kit, not a production system. It shows how the platform bounda
 
 ## Current Status
 
-The first public reference release is ready as `v0.1.0`. The implemented scope includes the solution skeleton, model gateway and prompt template foundation, document upload and DB-backed indexing, pgvector-backed RAG, sanitized AI request logs, pricing records, a usage endpoint, a shared API/CLI evaluation workflow, and bounded agentic chat with backend-controlled demo tools.
+The `v0.2.0` reference release builds on `v0.1.0` with a local stdio MCP host. The implemented scope includes the solution skeleton, model gateway and prompt template foundation, document upload and DB-backed indexing, pgvector-backed RAG, sanitized AI request logs, pricing records, a usage endpoint, a shared API/CLI evaluation workflow, bounded agentic chat with backend-controlled demo tools, and MCP tools over existing Application use cases.
 
 The public sample path uses deterministic mock providers. OpenAI-compatible model and embedding adapters are included behind Application ports and covered by loopback integration tests, but this repository does not commit real-provider usage output because those runs depend on private credentials, account-specific provider behavior and sanitized local evidence.
 
@@ -42,6 +42,8 @@ flowchart LR
 
 The project uses Clean Architecture with CQRS-lite where it improves clarity. API endpoints stay thin, Application modules own use cases and ports, Domain stays provider-agnostic, Infrastructure implements persistence/provider adapters, and Worker runs background jobs through the Core and Knowledge modules.
 
+`GenAIPlatform.Mcp` adds a local stdio MCP host as the fourth consumption surface: REST for HTTP callers, Worker for background jobs, the Evaluations CLI for offline runs and MCP for AI clients. It exposes a bounded read-only tool set over existing Application use cases, including one governed safe Agentic tool that still goes through backend policy and audit.
+
 Start here:
 
 - [Architecture](docs/architecture.md)
@@ -58,6 +60,7 @@ Start here:
 - Sanitized AI request logs, usage/cost tracking and documented observability extension points.
 - Evaluation runner through API and CLI.
 - Safe tool execution and bounded agentic chat.
+- Local MCP host as a fourth consumption surface alongside REST, Worker and CLI.
 - Docker Compose local development.
 - Clean/modular .NET architecture.
 
@@ -72,8 +75,10 @@ Start here:
 - [Cost tracking](docs/cost-tracking.md)
 - [Safe tools](docs/safe-tools.md)
 - [Agentic chat](docs/agentic-chat.md)
+- [MCP host](docs/mcp.md)
 - [Observability](docs/observability.md)
 - [Local demo walkthrough](docs/local-demo.md)
+- [v0.2.0 release notes](docs/release-notes-v0.2.0.md)
 - [v0.1.0 release notes](docs/release-notes-v0.1.0.md)
 
 ## Target Stack
@@ -102,6 +107,7 @@ src/
   GenAIPlatform.Application.Usage
   GenAIPlatform.Domain
   GenAIPlatform.Infrastructure
+  GenAIPlatform.Mcp
   GenAIPlatform.Worker
   GenAIPlatform.Evaluations
 tests/

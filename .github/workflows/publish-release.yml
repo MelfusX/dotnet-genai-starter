@@ -1,18 +1,28 @@
 name: publish-release
 
 on:
+  # Primary path: a squash merge to main is release-ready. The workflow reads
+  # VERSION, tags the current main HEAD and publishes the GitHub release.
   push:
+    branches:
+      - main
     tags:
       - "v*.*.*"
+  # Recovery path: manually publish from main with an explicit version if an
+  # automatic run must be repaired or replayed.
   workflow_dispatch:
     inputs:
-      tag:
-        description: "Existing tag to publish, for example v0.1.0"
+      version:
+        description: "Version to release, e.g. v0.3.0 or 0.3.0. Run from main."
         required: true
         type: string
 
 permissions:
   contents: write
+
+concurrency:
+  group: publish-release-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   release:
@@ -29,21 +39,85 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Switch the working tree to the requested tag BEFORE any validation step
-      # so build, format, gates and tests run against the exact commit that will
-      # be published. Without this, workflow_dispatch would validate the default
-      # branch HEAD while publishing a potentially unrelated tag.
-      - name: Resolve workflow_dispatch tag
-        if: github.event_name == 'workflow_dispatch'
+      # Resolve the release version and require its release-notes file BEFORE the
+      # build/format/gates/tests, so a bad version or missing notes fail fast.
+      # Main pushes read VERSION, workflow_dispatch uses the typed input, and tag
+      # pushes publish the pushed tag. Main/dispatch releases create a tag only
+      # when the same version does not already point at the current HEAD.
+      - name: Resolve and validate release version
+        id: version
         env:
-          DISPATCH_TAG: ${{ inputs.tag }}
+          DISPATCH_VERSION: ${{ inputs.version }}
         run: |
           set -euo pipefail
-          if ! git rev-parse --verify --quiet "refs/tags/${DISPATCH_TAG}" >/dev/null; then
-            echo "::error::Tag '${DISPATCH_TAG}' does not exist."
+
+          can_create_tag=false
+
+          if [[ "${GITHUB_EVENT_NAME}" == "push" && "${GITHUB_REF}" == "refs/heads/main" ]]; then
+            if [[ ! -f VERSION ]]; then
+              echo "::error::Missing VERSION. Release PRs must update VERSION before merging to main."
+              exit 1
+            fi
+
+            version_file="$(tr -d '[:space:]' < VERSION)"
+            if [[ ! "${version_file}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "::error::VERSION must contain SemVer without a leading v, e.g. 0.3.0."
+              exit 1
+            fi
+
+            version="v${version_file}"
+            can_create_tag=true
+          elif [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            if [[ "${GITHUB_REF}" != "refs/heads/main" ]]; then
+              echo "::error::workflow_dispatch releases must run from main, got '${GITHUB_REF}'."
+              exit 1
+            fi
+
+            raw_version="${DISPATCH_VERSION}"
+            if [[ "${raw_version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              version="v${raw_version}"
+            elif [[ "${raw_version}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              version="${raw_version}"
+            else
+              echo "::error::Version '${raw_version}' must look like v1.2.3 or 1.2.3."
+              exit 1
+            fi
+
+            can_create_tag=true
+          else
+            version="${GITHUB_REF_NAME}"
+          fi
+
+          if [[ ! "${version}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Release version '${version}' must look like v1.2.3."
             exit 1
           fi
-          git -c advice.detachedHead=false checkout --detach "refs/tags/${DISPATCH_TAG}"
+
+          notes_file="docs/release-notes-${version}.md"
+          if [[ ! -f "${notes_file}" ]]; then
+            echo "::error::Missing ${notes_file}. Add it in the release PR before publishing ${version}."
+            exit 1
+          fi
+
+          tag_exists=false
+          if git rev-parse --verify --quiet "refs/tags/${version}" >/dev/null; then
+            tagged_sha="$(git rev-list -n 1 "refs/tags/${version}")"
+            head_sha="$(git rev-parse HEAD)"
+            if [[ "${tagged_sha}" != "${head_sha}" ]]; then
+              echo "::error::Tag '${version}' already exists at ${tagged_sha}, but current HEAD is ${head_sha}."
+              exit 1
+            fi
+            tag_exists=true
+          fi
+
+          should_create_tag=false
+          if [[ "${can_create_tag}" == "true" && "${tag_exists}" != "true" ]]; then
+            should_create_tag=true
+          fi
+
+          echo "version=${version}" >> "${GITHUB_OUTPUT}"
+          echo "notes_file=${notes_file}" >> "${GITHUB_OUTPUT}"
+          echo "should_create_tag=${should_create_tag}" >> "${GITHUB_OUTPUT}"
 
       - name: Detect NuGet lock files
         id: nuget-locks
@@ -95,32 +169,33 @@ jobs:
       - name: Unit tests
         run: dotnet test tests/GenAIPlatform.UnitTests/GenAIPlatform.UnitTests.csproj --configuration Release --no-build
 
+      # Main/dispatch releases tag the validated HEAD. Tag-push releases already
+      # have a tag, and reruns skip this step when the tag points at the same HEAD.
+      - name: Tag release commit
+        if: steps.version.outputs.should_create_tag == 'true'
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${RELEASE_VERSION}" -m "${RELEASE_VERSION}"
+          git push origin "refs/tags/${RELEASE_VERSION}"
+
       - name: Publish GitHub release
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-          DISPATCH_TAG: ${{ inputs.tag }}
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+          NOTES_FILE: ${{ steps.version.outputs.notes_file }}
         run: |
           set -euo pipefail
 
-          # On push, GITHUB_REF_NAME is the tag. On workflow_dispatch, the earlier
-          # "Resolve workflow_dispatch tag" step has already detached HEAD at the
-          # requested tag, so we can take the tag name directly from the input.
-          tag_name="${GITHUB_REF_NAME}"
-          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
-            tag_name="${DISPATCH_TAG}"
-          fi
-
-          notes_file="docs/release-notes-${tag_name}.md"
-          if [[ ! -f "${notes_file}" ]]; then
-            notes_file="docs/release-notes-v0.1.0.md"
-          fi
-
-          if gh release view "${tag_name}" >/dev/null 2>&1; then
-            echo "GitHub release '${tag_name}' already exists."
+          if gh release view "${RELEASE_VERSION}" >/dev/null 2>&1; then
+            echo "GitHub release '${RELEASE_VERSION}' already exists."
             exit 0
           fi
 
-          gh release create "${tag_name}" \
-            --title "${tag_name}" \
-            --notes-file "${notes_file}"
+          gh release create "${RELEASE_VERSION}" \
+            --title "${RELEASE_VERSION}" \
+            --notes-file "${NOTES_FILE}"

@@ -44,6 +44,14 @@ A starter kit is easier to build and understand. A framework requires stable API
 
 A lightweight internal dispatcher keeps the starter kit dependency-light. MediatR v12 can be familiar for many .NET developers, but newer MediatR versions may introduce licensing considerations. This project uses an internal dispatcher/pipeline and can document MediatR as an optional alternative later.
 
+The replacement boundary is the dispatcher engine, not the hosts or use-case contracts. A MediatR swap should replace `ApplicationDispatcher`, `RequestValidationBehavior`, `DispatchLoggingBehavior` and the dispatcher delegate shape with MediatR request handling and pipeline behaviors. The stable contracts are `IApplicationDispatcher`, the request marker interfaces and module-owned `IRequestHandler<TRequest, TResponse>` handlers. Hosts should continue depending on `IApplicationDispatcher` and explicit per-module registration methods so API, Worker, Evaluations and MCP composition do not learn which dispatcher engine is active.
+
+That swap would still require deliberate adapter work because the current dispatcher signatures are not MediatR signatures. Keeping the seam at `IApplicationDispatcher` avoids spreading a framework dependency across hosts while preserving a clear migration path if a team prefers MediatR in its own application.
+
+## MCP Host Safe Tool Surface
+
+The v0.2.0 MCP host intentionally exposes only safe, bounded tools over existing Application use cases. It does not expose a generic registry executor, and approval-required tools are outside the MCP host surface because there is not yet a broadly supported interactive approval flow across MCP clients. A direct governed-tool use-case call for a `RequiresApproval = true` tool fails closed with `approval_required` and still writes audit; the host does not provide a successful execution path for that class of tool until protocol and client support make approvals explicit.
+
 ## FluentValidation vs Custom Validators
 
 FluentValidation is used for request-shape validation because it is familiar to many .NET teams, has no MediatR dependency and keeps rule composition separate from handler orchestration. Handlers that need normalized value objects use a neighboring `Normalizer.cs` instead of asking validators to both reject invalid input and build workflow state.

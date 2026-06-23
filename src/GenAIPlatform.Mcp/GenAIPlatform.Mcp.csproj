@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\GenAIPlatform.Application.Agentic\GenAIPlatform.Application.Agentic.csproj" />
+    <ProjectReference Include="..\GenAIPlatform.Application.Core\GenAIPlatform.Application.Core.csproj" />
+    <ProjectReference Include="..\GenAIPlatform.Application.Generation\GenAIPlatform.Application.Generation.csproj" />
+    <ProjectReference Include="..\GenAIPlatform.Application.Knowledge\GenAIPlatform.Application.Knowledge.csproj" />
+    <ProjectReference Include="..\GenAIPlatform.Application.Usage\GenAIPlatform.Application.Usage.csproj" />
+    <ProjectReference Include="..\GenAIPlatform.Domain\GenAIPlatform.Domain.csproj" />
+    <ProjectReference Include="..\GenAIPlatform.Infrastructure\GenAIPlatform.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.9" />
+    <PackageReference Include="ModelContextProtocol" Version="1.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
