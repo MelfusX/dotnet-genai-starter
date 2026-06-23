@@ -134,10 +134,11 @@ dotnet test tests\GenAIPlatform.IntegrationTests\GenAIPlatform.IntegrationTests.
 - Keep commits atomic and green: one logical change per commit, each passing the gate.
 - For a public release PR, update `VERSION` with SemVer without a leading `v`, update `CHANGELOG.md`,
   and add the matching `docs/release-notes-v<version>.md` file.
-- Releases are automatic after merge to `main`: the `publish-release` workflow runs on the `main` push,
-  reads `VERSION`, validates the matching release-notes file, reruns build/format/code-organization/
-  vulnerability/unit-test gates, tags the current `main` HEAD and publishes the GitHub release. Full
-  integration coverage is enforced before merge by PR/main CI.
+- Releases are automatic after a release PR that changes `VERSION` is merged to `main`: the
+  `publish-release` workflow runs on that `main` push, reads `VERSION`, validates the matching
+  release-notes file, reruns build/format/code-organization/vulnerability/unit-test gates, tags the
+  current `main` HEAD and publishes the GitHub release. Full integration coverage is enforced before
+  merge by PR/main CI. Non-release PRs must not change `VERSION`.
 - Normal releases do not require `Run workflow`. `workflow_dispatch` and direct tag pushes are recovery
   paths only. Agents must not push release tags.
 

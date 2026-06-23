@@ -1,11 +1,13 @@
 name: publish-release
 
 on:
-  # Primary path: a squash merge to main is release-ready. The workflow reads
-  # VERSION, tags the current main HEAD and publishes the GitHub release.
+  # Primary path: a squash merge of a release PR updates VERSION on main.
+  # The workflow reads VERSION, tags the current main HEAD and publishes the release.
   push:
     branches:
       - main
+    paths:
+      - VERSION
     tags:
       - "v*.*.*"
   # Recovery path: manually publish from main with an explicit version if an
@@ -41,9 +43,10 @@ jobs:
 
       # Resolve the release version and require its release-notes file BEFORE the
       # build/format/gates/tests, so a bad version or missing notes fail fast.
-      # Main pushes read VERSION, workflow_dispatch uses the typed input, and tag
-      # pushes publish the pushed tag. Main/dispatch releases create a tag only
-      # when the same version does not already point at the current HEAD.
+      # Main pushes reach this workflow only when VERSION changes, workflow_dispatch
+      # uses the typed input, and tag pushes publish the pushed tag. Main/dispatch
+      # releases create a tag only when the same version does not already point at
+      # the current HEAD.
       - name: Resolve and validate release version
         id: version
         env:
