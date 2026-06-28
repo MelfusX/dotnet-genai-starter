@@ -77,6 +77,23 @@ public sealed class AgentToolPolicyTests
         Assert.False(decision.MayExecute);
     }
 
+    [Theory]
+    [InlineData("mcp_admin_runsqlquery")]
+    [InlineData("mcp_admin_run_sql_query")]
+    [InlineData("mcp_admin_sendemail")]
+    [InlineData("mcp_admin_delete_document")]
+    public void Decide_RejectsKnownForbiddenToolFragmentsBeforeRegisteredMetadata(string requestedToolName)
+    {
+        var metadata = ToolPolicyMetadata.ApprovalRequired("External tool would otherwise require approval only.");
+
+        var decision = new ToolPolicy().Decide(metadata, requestedToolName);
+
+        Assert.Equal("Forbidden", decision.Decision);
+        Assert.Equal(ToolRisk.Forbidden, decision.Risk);
+        Assert.False(decision.RequiresApproval);
+        Assert.False(decision.MayExecute);
+    }
+
     [Fact]
     public void Decide_FailsClosedForUnknownTool()
     {
