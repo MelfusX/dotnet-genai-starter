@@ -30,6 +30,27 @@
           "FluentValidation": "12.1.1"
         }
       },
+      "Microsoft.Extensions.AI.Abstractions": {
+        "type": "Transitive",
+        "resolved": "10.5.2",
+        "contentHash": "Ei+YWV9Ybnps7pR1dgjlG29gelXEwZkhLVAcWmKe6HvXS6LNBYgSdWiY3Hk9OZXYtK34rv/NtLWBQYQGOBQYPQ=="
+      },
+      "ModelContextProtocol": {
+        "type": "Transitive",
+        "resolved": "1.4.0",
+        "contentHash": "CAmnAMQIMax2t9naUgyDAkVBj329EhQCiHcbfirMFNgP6ShQ8hJdJb0OLoaBpeGjkunH3IOjRXLdwXGKKwMlLA==",
+        "dependencies": {
+          "ModelContextProtocol.Core": "1.4.0"
+        }
+      },
+      "ModelContextProtocol.Core": {
+        "type": "Transitive",
+        "resolved": "1.4.0",
+        "contentHash": "6ZJFQTgYwdu0IacUUTNExAY2Z+JFuTd10CPeORalQtuGPY4hdUqq0BXxTpNEP0n7ajruNsGXyCKQLP0erIZmog==",
+        "dependencies": {
+          "Microsoft.Extensions.AI.Abstractions": "10.5.2"
+        }
+      },
       "Npgsql": {
         "type": "Transitive",
         "resolved": "10.0.3",
@@ -110,6 +131,7 @@
           "GenAIPlatform.Application.Knowledge": "[1.0.0, )",
           "GenAIPlatform.Application.Usage": "[1.0.0, )",
           "GenAIPlatform.Domain": "[1.0.0, )",
+          "ModelContextProtocol": "[1.4.0, )",
           "Npgsql": "[10.0.3, )",
           "Pgvector": "[0.3.2, )"
         }
