@@ -368,6 +368,35 @@ public sealed class ExternalMcpAgentToolSourceTests
         Assert.Empty(new ExternalMcpAgentToolSource(manager).GetAvailableTools());
     }
 
+    [Fact]
+    public void ToSdkArguments_PreservesNestedShapeAndNumericFidelity()
+    {
+        using var document = JsonDocument.Parse("""
+        {
+          "bigInt": 9007199254740993,
+          "highPrecision": 12345678901234567890.12345678901234567890,
+          "negative": -42,
+          "nested": { "flags": [ true, false ], "missing": null },
+          "text": "hello"
+        }
+        """);
+
+        var sdkArguments = ExternalMcpJsonRoundTrip.ToSdkArguments(document.RootElement);
+
+        // The MCP SDK re-serializes these arguments via System.Text.Json. Assert the round-trip
+        // preserves nested shape and raw numeric tokens (no lossy double/long conversion) — a
+        // hand-rolled JsonElement mapper would break this.
+        var reserialized = JsonSerializer.SerializeToElement(sdkArguments);
+        Assert.Equal("9007199254740993", reserialized.GetProperty("bigInt").GetRawText());
+        Assert.Equal(
+            "12345678901234567890.12345678901234567890",
+            reserialized.GetProperty("highPrecision").GetRawText());
+        Assert.Equal("-42", reserialized.GetProperty("negative").GetRawText());
+        Assert.True(reserialized.GetProperty("nested").GetProperty("flags")[0].GetBoolean());
+        Assert.Equal(JsonValueKind.Null, reserialized.GetProperty("nested").GetProperty("missing").ValueKind);
+        Assert.Equal("hello", reserialized.GetProperty("text").GetString());
+    }
+
     private static ExternalMcpConnectionManager CreateManager(
         FakeExternalMcpClientFactory factory,
         params ExternalMcpServerOptions[] servers)
