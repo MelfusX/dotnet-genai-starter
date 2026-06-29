@@ -186,6 +186,45 @@ public sealed class ArchitectureTests
         Assert.Empty(filesWithInterfaces);
     }
 
+    [Fact]
+    public void ApplicationProjects_DoNotReferenceExternalMcpSdkOrProcessIo()
+    {
+        var applicationDirectories = Directory
+            .EnumerateDirectories(Path.Combine(RepositoryRoot(), "src"), "GenAIPlatform.Application.*")
+            .ToArray();
+        var forbiddenMarkers = new[]
+        {
+            "ModelContextProtocol",
+            "StdioClientTransport",
+            "ProcessStartInfo",
+            "System.Diagnostics.Process"
+        };
+        var failures = new List<string>();
+
+        foreach (var directory in applicationDirectories)
+        {
+            foreach (var projectPath in Directory.EnumerateFiles(directory, "*.csproj"))
+            {
+                AddForbiddenMarkers(
+                    failures,
+                    Path.GetRelativePath(RepositoryRoot(), projectPath),
+                    File.ReadAllText(projectPath),
+                    forbiddenMarkers);
+            }
+
+            foreach (var sourcePath in EnumerateSourceFiles(directory))
+            {
+                AddForbiddenMarkers(
+                    failures,
+                    Path.GetRelativePath(RepositoryRoot(), sourcePath),
+                    File.ReadAllText(sourcePath),
+                    forbiddenMarkers);
+            }
+        }
+
+        Assert.Empty(failures);
+    }
+
     private static Dictionary<string, SourceProject> LoadSourceProjects()
     {
         var sourceDirectory = Path.Combine(RepositoryRoot(), "src");
@@ -283,6 +322,21 @@ public sealed class ArchitectureTests
         var firstSegment = relativePath.Split('/')[0];
         return firstSegment.Equals("Setup.cs", StringComparison.Ordinal) ||
             allowedFolders.Contains(firstSegment);
+    }
+
+    private static void AddForbiddenMarkers(
+        List<string> failures,
+        string relativePath,
+        string content,
+        IReadOnlyCollection<string> markers)
+    {
+        foreach (var marker in markers)
+        {
+            if (content.Contains(marker, StringComparison.Ordinal))
+            {
+                failures.Add($"{relativePath} contains forbidden external MCP/I/O marker {marker}.");
+            }
+        }
     }
 
     private static string RepositoryRoot()

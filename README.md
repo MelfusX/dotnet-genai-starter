@@ -7,7 +7,7 @@ This is a starter kit, not a production system. It shows how the platform bounda
 ## What This Is
 
 - A modular-monolith sample using Clean Architecture, simple domain records and a lightweight internal application pipeline.
-- A working local demo for document upload, DB-backed indexing, pgvector-backed RAG, direct chat, usage reporting, API/CLI evaluations, bounded agentic chat and a local MCP host.
+- A working local demo for document upload, DB-backed indexing, pgvector-backed RAG, direct chat, usage reporting, API/CLI evaluations, bounded agentic chat, a local MCP host and external MCP tools under first-party governance.
 - A reference for safe GenAI defaults: access filters before prompt construction, metadata-only request logging by default, deterministic mock providers for tests and backend policy for tools.
 
 ## What This Is Not
@@ -19,7 +19,7 @@ This is a starter kit, not a production system. It shows how the platform bounda
 
 ## Current Status
 
-The `v0.2.0` reference release builds on `v0.1.0` with a local stdio MCP host. The implemented scope includes the solution skeleton, model gateway and prompt template foundation, document upload and DB-backed indexing, pgvector-backed RAG, sanitized AI request logs, pricing records, a usage endpoint, a shared API/CLI evaluation workflow, bounded agentic chat with backend-controlled demo tools, and MCP tools over existing Application use cases.
+The `v0.3.0` reference release builds on the local stdio MCP host from `v0.2.0` with MCP client support for external stdio MCP servers. The implemented scope includes the solution skeleton, model gateway and prompt template foundation, document upload and DB-backed indexing, pgvector-backed RAG, sanitized AI request logs, pricing records, a usage endpoint, a shared API/CLI evaluation workflow, bounded agentic chat with backend-controlled demo tools, MCP tools over existing Application use cases, and external MCP tools routed through backend policy, approval and audit.
 
 The public sample path uses deterministic mock providers. OpenAI-compatible model and embedding adapters are included behind Application ports and covered by loopback integration tests, but this repository does not commit real-provider usage output because those runs depend on private credentials, account-specific provider behavior and sanitized local evidence.
 
@@ -44,6 +44,8 @@ The project uses Clean Architecture with CQRS-lite where it improves clarity. AP
 
 `GenAIPlatform.Mcp` adds a local stdio MCP host as the fourth consumption surface: REST for HTTP callers, Worker for background jobs, the Evaluations CLI for offline runs and MCP for AI clients. It exposes a bounded read-only tool set over existing Application use cases, including one governed safe Agentic tool that still goes through backend policy and audit.
 
+External MCP servers are consumed separately by Infrastructure as Agentic tool sources. Their tools are not exposed through the local MCP host as a generic executor; they appear in the platform's agentic loop only after allow-listing, snapshotting, name prefixing and backend approval policy.
+
 Start here:
 
 - [Architecture](docs/architecture.md)
@@ -61,6 +63,7 @@ Start here:
 - Evaluation runner through API and CLI.
 - Safe tool execution and bounded agentic chat.
 - Local MCP host as a fourth consumption surface alongside REST, Worker and CLI.
+- External MCP tools routed through the same Agentic validation, approval and audit path as built-in tools.
 - Docker Compose local development.
 - Clean/modular .NET architecture.
 
@@ -78,6 +81,7 @@ Start here:
 - [MCP host](docs/mcp.md)
 - [Observability](docs/observability.md)
 - [Local demo walkthrough](docs/local-demo.md)
+- [v0.3.0 release notes](docs/release-notes-v0.3.0.md)
 - [v0.2.0 release notes](docs/release-notes-v0.2.0.md)
 - [v0.1.0 release notes](docs/release-notes-v0.1.0.md)
 

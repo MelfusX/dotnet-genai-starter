@@ -20,7 +20,8 @@ public static class Setup
     {
         services.AddAgenticOptions(configuration);
         services.AddValidatorsFromAssembly(typeof(Setup).Assembly, includeInternalTypes: true);
-        services.TryAddScoped<IAgentToolRegistry, DemoAgentToolRegistry>();
+        services.TryAddScoped<DemoAgentToolRegistry>();
+        services.TryAddScoped<IAgentToolRegistry, CompositeAgentToolRegistry>();
         services.TryAddScoped<ToolPolicy>();
         services.TryAddScoped<AgenticPromptBuilder>();
         services.TryAddScoped<AgentToolAuditLogWriter>();

@@ -26,6 +26,7 @@ using GenAIPlatform.Infrastructure.Documents.Postgres.Ingestion;
 using GenAIPlatform.Infrastructure.Documents.Postgres.StorageCleanup;
 using GenAIPlatform.Infrastructure.ModelGateway.Mock;
 using GenAIPlatform.Infrastructure.ModelGateway.OpenAi;
+using GenAIPlatform.Infrastructure.Mcp;
 using GenAIPlatform.Infrastructure.Embeddings.Mock;
 using GenAIPlatform.Infrastructure.Embeddings.OpenAi;
 
@@ -42,6 +43,7 @@ public static class Setup
         services.AddModelGatewayAdapters();
         services.AddEmbeddingAdapters();
         services.AddObservabilityInfrastructure(configuration);
+        services.AddExternalMcpInfrastructure(configuration);
         services.AddPersistenceAdapters();
         // Infrastructure supplies the background identity used by Worker hosts.
         // API foreground auth must bind IUserContext explicitly.
