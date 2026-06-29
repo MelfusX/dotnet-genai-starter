@@ -52,6 +52,9 @@ Configuration lives under `GenAIPlatform:ExternalMcp:Servers`:
 {
   "GenAIPlatform": {
     "ExternalMcp": {
+      "ConnectOnStartup": true,
+      "MaxParallelConnects": 4,
+      "RefreshInterval": "00:01:00",
       "Servers": [
         {
           "Name": "local-tools",
@@ -71,6 +74,8 @@ Configuration lives under `GenAIPlatform:ExternalMcp:Servers`:
 
 The `Servers` list is the server allow-list: only configured, enabled servers are considered. `AllowedTools` is an optional per-server tool allow-list. When `AllowedTools` is empty, all tools reported by that enabled server are wrapped; when it is populated, only matching original external tool names are exposed to the agentic registry.
 
+Connection lifecycle is controlled at the `ExternalMcp` level. `ConnectOnStartup` (default `true`) runs a startup warmup; set it to `false` to connect on demand instead. `MaxParallelConnects` (default `4`) bounds how many servers connect concurrently so one slow or hung server cannot delay the others, while connect order never changes the deterministic tool listing. `RefreshInterval` (default one minute, `00:00:00` to disable) is a background pass that re-attempts servers which are not currently available and lists their tools; already-available servers are left untouched. Startup is non-blocking: the warmup and recovery run in the background, so an unreachable server never delays host startup.
+
 External tool definitions are treated as untrusted input. Descriptions are sanitized and length-limited before they can enter a model prompt. Tool argument payloads are passed through JSON round-trip conversion at the adapter boundary so nested objects and arrays are preserved.
 
 ## External Tool Governance Guarantees
@@ -82,7 +87,7 @@ The external MCP adapter keeps governance in the platform:
 - Prefixed names: external tools are exposed as provider-safe `mcp_<server>_<tool>` names after ASCII sanitization and length limiting.
 - Approval by default: every external MCP tool is registered as approval-required, regardless of how the external server describes itself.
 - Backend allow-list: only configured servers and allowed tools can appear in the agentic registry.
-- Fail closed/degrade: unavailable or timed-out servers produce no available tools or failed tool results rather than bypassing policy or crashing the agentic loop; later calls can reconnect through the connection manager.
+- Fail closed/degrade: unavailable or timed-out servers produce no available tools or failed tool results rather than bypassing policy or crashing the agentic loop. A server that is unavailable at startup recovers on the next background refresh pass (or an explicit refresh); a connection that drops after a tool was listed is re-established on the next call to that tool.
 - Audit path: executed, approval-required, rejected and failed external tool calls go through the same tool audit mechanism as built-in Agentic tools.
 
 This starter-kit release does not claim production-ready remote MCP authentication, secret storage or enterprise connector management. External stdio server configuration is a local/sample adapter pattern; production credential handling and remote multi-tenant MCP are future work.

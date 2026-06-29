@@ -6,7 +6,7 @@ internal static class ExternalMcpSnapshotBuilder
         ExternalMcpServerOptions server,
         int order,
         IReadOnlyList<ExternalMcpToolDescriptor> descriptors,
-        bool isAvailable)
+        ExternalMcpServerStatus status)
     {
         var serverName = ExternalMcpNameSanitizer.SanitizeSegment(server.Name, "server");
         var allowedTools = server.AllowedTools.ToHashSet(StringComparer.Ordinal);
@@ -18,7 +18,7 @@ internal static class ExternalMcpSnapshotBuilder
             .OrderBy(tool => tool.PrefixedName, StringComparer.Ordinal)
             .ToArray();
 
-        return new ExternalMcpServerSnapshot(serverName, order, isAvailable, tools);
+        return new ExternalMcpServerSnapshot(serverName, order, status, tools);
     }
 
     private static ExternalMcpToolSnapshot BuildToolSnapshot(

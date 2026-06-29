@@ -159,8 +159,9 @@ public sealed class ExternalAgenticToolGovernanceTests
                 ]
             }),
             new SingleExternalMcpClientFactory(externalClient),
+            new AlwaysConnectMcpPolicy(),
             NullLogger<ExternalMcpConnectionManager>.Instance);
-        await manager.StartAsync(CancellationToken.None);
+        await manager.RefreshAsync(CancellationToken.None);
         try
         {
             var source = new ExternalMcpAgentToolSource(manager);

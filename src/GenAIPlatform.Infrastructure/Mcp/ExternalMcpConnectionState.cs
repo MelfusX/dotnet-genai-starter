@@ -14,11 +14,17 @@ internal sealed class ExternalMcpConnectionState
         }
     }
 
-    public void ReplaceSnapshots(IReadOnlyList<ExternalMcpServerSnapshot> nextSnapshots)
+    public void UpsertSnapshot(ExternalMcpServerSnapshot snapshot)
     {
         lock (gate)
         {
-            snapshots = nextSnapshots;
+            // Replace this server's snapshot only, leaving concurrent changes to other servers
+            // intact. Order by the configured index so the listing stays deterministic.
+            snapshots = snapshots
+                .Where(existing => !string.Equals(existing.ServerName, snapshot.ServerName, StringComparison.Ordinal))
+                .Append(snapshot)
+                .OrderBy(static existing => existing.Order)
+                .ToArray();
         }
     }
 
@@ -51,13 +57,13 @@ internal sealed class ExternalMcpConnectionState
         }
     }
 
-    public void MarkAvailability(string serverName, bool isAvailable)
+    public void MarkStatus(string serverName, ExternalMcpServerStatus status)
     {
         lock (gate)
         {
             snapshots = snapshots
                 .Select(snapshot => string.Equals(snapshot.ServerName, serverName, StringComparison.Ordinal)
-                    ? snapshot with { IsAvailable = isAvailable }
+                    ? snapshot with { Status = status }
                     : snapshot)
                 .ToArray();
         }
@@ -69,7 +75,9 @@ internal sealed class ExternalMcpConnectionState
         {
             var current = connections.Values.ToArray();
             connections.Clear();
-            snapshots = snapshots.Select(static snapshot => snapshot with { IsAvailable = false }).ToArray();
+            snapshots = snapshots
+                .Select(static snapshot => snapshot with { Status = ExternalMcpServerStatus.Unavailable })
+                .ToArray();
             return current;
         }
     }

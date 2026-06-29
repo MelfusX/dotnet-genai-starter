@@ -21,6 +21,7 @@ internal static class ExternalMcpSetup
             ExternalMcpOptionsValidator>());
 
         services.TryAddSingleton<IExternalMcpClientFactory, SdkExternalMcpClientFactory>();
+        services.TryAddSingleton<IExternalMcpConnectionPolicy, AlwaysConnectMcpPolicy>();
         services.TryAddSingleton<ExternalMcpConnectionManager>();
         services.TryAddSingleton<IExternalMcpConnectionManager>(
             serviceProvider => serviceProvider.GetRequiredService<ExternalMcpConnectionManager>());

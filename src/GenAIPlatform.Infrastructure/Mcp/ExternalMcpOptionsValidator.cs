@@ -9,6 +9,16 @@ internal sealed class ExternalMcpOptionsValidator : IValidateOptions<ExternalMcp
         var failures = new List<string>();
         var serverNames = new HashSet<string>(StringComparer.Ordinal);
 
+        if (options.MaxParallelConnects < 1)
+        {
+            failures.Add("External MCP MaxParallelConnects must be at least 1.");
+        }
+
+        if (options.RefreshInterval < TimeSpan.Zero)
+        {
+            failures.Add("External MCP RefreshInterval cannot be negative.");
+        }
+
         foreach (var server in options.Servers.Where(static server => server.Enabled))
         {
             if (string.IsNullOrWhiteSpace(server.Name))
