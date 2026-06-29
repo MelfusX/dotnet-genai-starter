@@ -1,5 +1,39 @@
 # Changelog
 
+## v0.3.0
+
+Adds MCP client support for consuming external stdio MCP servers as Agentic
+tools under first-party governance. External tools are adapted in
+Infrastructure behind an Application Agentic port, then routed through the
+same validation, policy, approval, budget and audit path as built-in tools.
+
+The external MCP adapter captures tool definitions at connect time, writes the
+snapshot hash as backend-owned schema provenance, sanitizes tool descriptions,
+prefixes provider-safe names as `mcp_<server>_<tool>` and makes every external tool
+approval-required by default. Server configuration is explicit under
+`GenAIPlatform:ExternalMcp:Servers`, with enabled servers and optional
+per-server `AllowedTools` limiting what can appear in the agentic registry.
+
+Connection handling is resilient: startup is non-blocking, servers connect
+bounded-parallel without changing the deterministic tool listing, a server that
+is unavailable at startup recovers on a background refresh pass, and a per-server
+connection policy seam gates connect attempts. `ConnectOnStartup`,
+`MaxParallelConnects` and `RefreshInterval` are configurable; circuit-breaker
+backoff escalation remains future work behind the policy seam.
+
+The v0.3.0 test coverage includes the composite Agentic registry,
+Infrastructure adapter behavior, deterministic external-tool listing,
+JSON argument fidelity, timeout/cancellation handling, timeout-to-unavailable behavior, unavailable-server
+degradation and governance/audit integration including approval-required,
+blacklist-before-wrapper-policy and snapshot/rug-pull scenarios. The automated gate does not depend
+on real child-process MCP servers.
+
+Documentation now covers external MCP configuration and governance guarantees.
+This remains a starter kit: production remote authentication, secret storage
+and enterprise connector management are future adapter work.
+
+Not a production system.
+
 ## v0.2.0
 
 Adds a local stdio MCP host as a fourth consumption surface over the existing
