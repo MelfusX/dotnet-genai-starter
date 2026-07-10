@@ -13,6 +13,7 @@ using WorkerService = GenAIPlatform.Worker.Worker;
 
 namespace GenAIPlatform.IntegrationTests;
 
+[Collection<CurrentDirectorySensitiveCollection>]
 public sealed class HostCompositionTests
 {
     private static readonly SemaphoreSlim CurrentDirectoryLock = new(1, 1);
